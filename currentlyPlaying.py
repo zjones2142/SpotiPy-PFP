@@ -1,8 +1,6 @@
 import os
-import time
 import spotipy
 from spotipy.oauth2 import SpotifyOAuth
-import webbrowser
 import ctypes
 
 # Replace with your Spotify Client ID and Client Secret
