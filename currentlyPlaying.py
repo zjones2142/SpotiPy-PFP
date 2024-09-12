@@ -1,10 +1,9 @@
 import os
+import time
 import spotipy
 from spotipy.oauth2 import SpotifyOAuth
-import ctypes
 import webbrowser
-import time
-import flask
+import ctypes
 
 # Replace with your Spotify Client ID and Client Secret
 client_id = '0cd9be3e63aa405da833af8595b39b6f'
@@ -13,44 +12,15 @@ redirect_uri = 'http://localhost:8000'  # Replace with your actual redirect URI
 scope = 'user-read-currently-playing'
 mydict = {ord(x): '' for x in [":", ",", "!", ".", ";", "'", " ", "-"]}
 
-# Create a Flask app to handle the callback
-app = flask.Flask(__name__)
-
-# Create a SpotifyOAuth object with the Implicit Grant Flow
+# Create a SpotifyOAuth object without automatic handling
 auth_manager = SpotifyOAuth(client_id=client_id, client_secret=client_secret,
                              redirect_uri=redirect_uri, scope=scope,
-                             open_browser=True)
+                             open_browser=False)
 
 # Generate the authorization URL
 auth_url = auth_manager.get_authorize_url()
 
-# Open the authorization URL in a new window
-webbrowser.open(auth_url, new=0, autoraise=False)
-
-# Flask route to handle the callback
-@app.route('/callback')
-def callback():
-    code = flask.request.args.get('code')
-    tokens = auth_manager.get_access_token(code)
-    return f"Authorization successful. Access token: {tokens['access_token']}"
-
-# Run the Flask app in the background
-import threading
-
-def run_flask_app():
-    app.run(port=8000, debug=False, use_reloader=False)
-
-flask_thread = threading.Thread(target=run_flask_app)
-flask_thread.start()
-
-# Wait for the user to authorize and return
-while True:
-    time.sleep(1)
-    token = auth_manager
-    if token:
-        break
-
-# Create a Spotify object using the access token
+# (Rest of your code to handle user interaction or further steps can go here)
 sp = spotipy.Spotify(auth_manager=auth_manager)
 
 def get_current_track_info():
