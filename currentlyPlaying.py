@@ -27,8 +27,7 @@ def get_current_track_info():
         if current_track:
             artist_name = current_track['item']['artists'][0]['name']
             album_name = current_track['item']['album']['name']
-            album_art = current_track['item']['album']['images'][0]['url']
-            return artist_name, album_name, album_art
+            return artist_name, album_name
         else:
             print("Nothing Was Playing...")
             return None, None
@@ -47,7 +46,7 @@ def setBackgrnd(album):
     
     if file:
         image = ctypes.c_wchar_p(file)
-
+    
         try:
             ctypes.windll.user32.SystemParametersInfoW(SPI_SETDESKWALLPAPER, 0, image, wallPaperStyle)
             print(f"Wallpaper set to {album}")
@@ -58,15 +57,27 @@ def setBackgrnd(album):
 def checkGizz():
     #get data
     try:
-        artist, album, art = get_current_track_info()
+        artist, album = get_current_track_info()
     except Exception as e:
         return 0
-
-    album = album.translate(mydict)
-
-    if (artist == 'King Gizzard & The Lizard Wizard') or (artist =='bootleg gizzard'):
-        setBackgrnd(album)
+    
+    if(album != None):
+        album = album.translate(mydict)
     else:
-        print("No Gizz Playing...")
+        artist = ''
+
+    with open('C:\\Users\\zachj\\Desktop\\PythonShtuff\\AlbumArtToPFP\\previousSetBackground.txt', 'r') as f:
+        previous_album = f.read().strip()
+
+        if (artist == 'King Gizzard & The Lizard Wizard'):
+            # Set the background and save the current album
+            setBackgrnd(album)
+            with open('previousSetBackground.txt', 'w') as f:
+                f.write(album)
+        else:
+            # Use the previous album
+            album = previous_album
+            print("No Gizz Playing.\nSetting to previously listened...")
+            setBackgrnd(album)
 
 checkGizz()
