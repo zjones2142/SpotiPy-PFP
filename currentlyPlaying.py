@@ -6,8 +6,8 @@ import requests
 import time
 
 # Replace with your Spotify Client ID and Client Secret
-client_id = '0cd9be3e63aa405da833af8595b39b6f'
-client_secret = '6b46a949153c4d73b705adad6e087e45'
+client_id = ''
+client_secret = ''
 redirect_uri = 'http://localhost:8000'  # Replace with your actual redirect URI
 scope = 'user-read-currently-playing'
 mydict = {ord(x): '' for x in [":", ",", "!", ".", ";", "'", " ", "-"]}
